@@ -1,0 +1,106 @@
+---
+title: "Muscle Confusion App Components"
+author: "Sam"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, fig.align="center")
+# load libraries ----
+library(shiny)
+
+library(dplyr)
+library(readr)
+library(stringr)
+library(lubridate)
+
+library(gt)
+library(htmltools)
+library(downloadthis)
+library(webshot)
+
+# set working directory ----
+# setwd("Programming/Exercise App")
+```
+
+```{r read-data}
+# get data ----
+gdocs_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv"
+#read data from url
+exercise_data <- read_csv( url(gdocs_url) )
+```
+
+
+```{r set-params}
+#declare parameters ----
+n_exercises = 5
+n_reps = 10
+n_sets = 1
+n_time = 2
+set_or_sets = "set"
+
+# allow for selections
+sliderInput("n_exercises", "Step 1: # Exercises", 1, 10, 1)
+sliderInput("n_sets", "Step 2: # Sets", 1, 5, 1)
+sliderInput("n_reps", "Step 3: # Reps", 5, 20, 1)
+sliderInput("n_time", "Step 4: # Minutes", 5, 20, 1)
+```
+
+
+```{r gt-table}
+#write in reps and sets to data of interest
+render_gt({
+  data_extr <- exercise_data %>% 
+    sample_n(input$n_exercises) %>%
+    mutate(`#` = row_number(), 
+           `Sets/Reps/Time` = 
+             case_when(
+              `Rep Or Time` == "Rep" ~ str_c(input$n_sets, set_or_sets, "of", input$n_reps, "reps", sep=" "),
+              `Rep Or Time` == "Time" ~ str_c(input$n_sets, set_or_sets, "of", input$n_time, "min", sep=" ")
+               )) %>%
+    select(`#`, Exercise, `Sets/Reps/Time`)
+  
+  #show gt table ----
+  gt_table <- data_extr %>% 
+    gt()
+  gt_table
+})
+```
+
+```{r no-print, include=FALSE}
+# gtsave(gt_table,
+#   "images", expand = 50,
+#   file =  "temp.png")
+```
+
+
+```{r download-buttons}
+# provide download button functionality ----
+library(downloadthis)
+
+# download button for table to xlsx
+# renderUI({
+# data_extr %>%
+#   download_this(
+#     output_name = str_c("rand_workout_plan_", today()),
+#     output_extension = ".xlsx",
+#     button_label = "Download XLSX",
+#     button_type = "primary",
+#   )
+# })
+#download button for table to png
+# renderUI({
+#   download_file(
+#     path = "images/temp.png",
+#     output_name = str_c("rand_workout_plan_", today()),
+#     output_extension = ".png",
+#     button_label = "Download PNG",
+#     button_type = "success",
+#     has_icon = TRUE,
+#     icon = "fa fa-save",
+#     self_contained = FALSE
+#   )
+#   })
+```
+

@@ -1,12 +1,13 @@
 ---
-title: "exercise_doc"
-author: "parmsam"
-date: "4/5/2021"
-output: html_document
+title: "Muscle Confusion App Components"
+author: "Sam"
+output: 
+  html_document:
+    theme: cerulean
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, fig.align="center")
 # load libraries ----
 library(dplyr)
 library(readr)
@@ -16,24 +17,26 @@ library(lubridate)
 library(gt)
 library(htmltools)
 library(downloadthis)
+library(webshot)
 
 # set working directory ----
 # setwd("Programming/Exercise App")
 ```
 
-```{r pressure, eval = FALSE}
-# get data from published google sheets csv
+```{r gt-table}
+# get data ----
 gdocs_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv"
-
+#read data from url
 exercise_data <- read_csv( url(gdocs_url) )
 
-#declare parameters
+#declare parameters ----
 n_exercises = 5
 n_reps = 10
 n_sets = 1
 n_time = 2
 set_or_sets = "set"
 
+#write in reps and sets to data of interest
 data_extr <- exercise_data %>% 
   sample_n(n_exercises) %>%
   mutate(`#` = row_number(), 
@@ -44,49 +47,42 @@ data_extr <- exercise_data %>%
              )) %>%
   select(`#`, Exercise, `Sets/Reps/Time`)
 
-attach_excel <- data_extr %>%
-  download_this(
-    output_name = "data_extr",
-    output_extension = ".xlsx", # Excel file type
-    button_label = "Download Excel",
-    button_type = "primary", # change button type
-  )
-
-data_extr %>%
-  gt() %>%
-  tab_source_note(attach_excel)
-
-library(downloadthis)
-
-head(mtcars) %>%
-  gt() %>%
-  tab_source_note(
-    mtcars %>%
-      download_this(
-        output_name = "mtcars",
-        output_extension = ".csv", # CSV output
-        button_label = "Download csv",
-        button_type = "default",
-      )
-  )
-
-#export to pdf instead
-
+#show gt table ----
+gt_table <- data_extr %>% 
+  gt()
+gt_table
 ```
 
-```{r, cache=FALSE}
+```{r no-print, include=FALSE}
+gtsave(gt_table,
+  "images", expand = 50,
+  file =  "temp.png")
+```
+
+
+```{r download-buttons}
+# provide download button functionality ----
 library(downloadthis)
 
-head(mtcars) %>%
-  gt() %>%
-  tab_source_note(
-    mtcars %>%
-      download_this(
-        output_name = "mtcars",
-        output_extension = ".csv", # CSV output
-        button_label = "Download csv",
-        button_type = "default",
-      )
+# download button for table to xlsx
+data_extr %>%
+  download_this(
+    output_name = str_c("rand_workout_plan_", today()),
+    output_extension = ".xlsx",
+    button_label = "Download XLSX",
+    button_type = "primary",
   )
+
+#download button for table to png
+download_file(
+  path = "images/temp.png",
+  output_name = str_c("rand_workout_plan_", today()),
+  output_extension = ".png",
+  button_label = "Download PNG",
+  button_type = "success",
+  has_icon = TRUE,
+  icon = "fa fa-save",
+  self_contained = FALSE
+)
 ```
 
