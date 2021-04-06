@@ -1,0 +1,92 @@
+---
+title: "exercise_doc"
+author: "parmsam"
+date: "4/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# load libraries ----
+library(dplyr)
+library(readr)
+library(stringr)
+library(lubridate)
+
+library(gt)
+library(htmltools)
+library(downloadthis)
+
+# set working directory ----
+# setwd("Programming/Exercise App")
+```
+
+```{r pressure, eval = FALSE}
+# get data from published google sheets csv
+gdocs_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv"
+
+exercise_data <- read_csv( url(gdocs_url) )
+
+#declare parameters
+n_exercises = 5
+n_reps = 10
+n_sets = 1
+n_time = 2
+set_or_sets = "set"
+
+data_extr <- exercise_data %>% 
+  sample_n(n_exercises) %>%
+  mutate(`#` = row_number(), 
+         `Sets/Reps/Time` = 
+           case_when(
+            `Rep Or Time` == "Rep" ~ str_c(n_sets, set_or_sets, "of", n_reps, "reps", sep=" "),
+            `Rep Or Time` == "Time" ~ str_c(n_sets, set_or_sets, "of", n_time, "min", sep=" ")
+             )) %>%
+  select(`#`, Exercise, `Sets/Reps/Time`)
+
+attach_excel <- data_extr %>%
+  download_this(
+    output_name = "data_extr",
+    output_extension = ".xlsx", # Excel file type
+    button_label = "Download Excel",
+    button_type = "primary", # change button type
+  )
+
+data_extr %>%
+  gt() %>%
+  tab_source_note(attach_excel)
+
+library(downloadthis)
+
+head(mtcars) %>%
+  gt() %>%
+  tab_source_note(
+    mtcars %>%
+      download_this(
+        output_name = "mtcars",
+        output_extension = ".csv", # CSV output
+        button_label = "Download csv",
+        button_type = "default",
+      )
+  )
+
+#export to pdf instead
+
+```
+
+```{r, cache=FALSE}
+library(downloadthis)
+
+head(mtcars) %>%
+  gt() %>%
+  tab_source_note(
+    mtcars %>%
+      download_this(
+        output_name = "mtcars",
+        output_extension = ".csv", # CSV output
+        button_label = "Download csv",
+        button_type = "default",
+      )
+  )
+```
+
