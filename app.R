@@ -15,6 +15,13 @@ library(bslib)
 library(shinyjs)
 library(httr)
 
+phantomjs_path <- webshot:::find_phantom()
+if (is.null(phantomjs_path)){
+  webshot::install_phantomjs()
+  FlgJS <- F
+} else{
+  FlgJS <- T
+}0
 # get data ----
 gdocs_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv"
 #read data from url
@@ -91,7 +98,7 @@ server <- function(input,output, session) {
   
   #show gt table ----
   
-  gt_table <- reactive({
+  gt_table <- function()({
     vals$gg <- data_extr() %>% 
     gt() %>%
       tab_header(
@@ -102,7 +109,7 @@ server <- function(input,output, session) {
         source_note = md('Click `Get  after it!` if changing <br>parameters. Made by <b><a href="https://github.com/parmsam">@parmsam</a></b>.')
       ) %>%
       tab_source_note(
-        source_note = md("Consult health professional before <br>starting a fitness program.")
+        source_note = md("Consult health professional before <br>starting a fitness program. Use the free <br>weight you're comfortable with.")
       )
     vals$gg
   })
@@ -125,8 +132,12 @@ server <- function(input,output, session) {
     filename = function() { 
       str_c('rand_workout_plan_', Sys.Date(), '.png', sep='')
       },
+    contentType = "image/png",
     content = function(con) {
-      gtsave(vals$gg, expand = 50, filename =  con)
+      gtsave(vals$gg, expand = 50, filename =  con, path = NULL)
+      # png(con)
+      # print(vals$gg)
+      # dev.off()
     }
   )
   
