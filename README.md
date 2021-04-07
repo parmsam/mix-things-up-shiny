@@ -1,4 +1,4 @@
-# muscle-confusion-shiny
+# mix-things-up-shiny
 random workout plan generator
 ## Shiny App
 https://parmsam.shinyapps.io/MuscleConfusion/
