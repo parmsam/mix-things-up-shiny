@@ -1,5 +1,5 @@
 ---
-title: "Muscle Confusion App Components"
+title: "Workout Plan App Components"
 author: "Sam"
 output: html_document
 runtime: shiny
