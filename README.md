@@ -1,7 +1,7 @@
 # mix-things-up-shiny
 random workout plan generator
 ## Shiny App
-https://parmsam.shinyapps.io/MuscleConfusion/
+https://parmsam.shinyapps.io/MixThingsUp/
 ## Purpose
 Build random workouts from list of exercises
 ## Data Sources
