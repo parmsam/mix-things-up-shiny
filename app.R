@@ -25,10 +25,10 @@ light <- bs_theme(version = 4, bootswatch = "minty")
 
 # define UI ----
 ui <- fluidPage(
-  # theme = shinytheme("lumen"),
+  # theme = shinytheme("lumen"), 
   theme = light,
   h4("a simple workout plan generator"),
-  titlePanel("Muscle Confusion"),
+  titlePanel("Mix Things Up"),
                 # Layout a sidebar and main area
                 sidebarLayout(
                   #side bar here ----
@@ -56,6 +56,8 @@ ui <- fluidPage(
 )
 
 server <- function(input,output, session) {
+  
+  vals <- reactiveValues()
   
   # define set_or_sets variable
   set_or_sets <- reactive({ 
@@ -90,18 +92,19 @@ server <- function(input,output, session) {
   #show gt table ----
   
   gt_table <- reactive({
-    data_extr() %>% 
+    vals$gg <- data_extr() %>% 
     gt() %>%
       tab_header(
         title = md("Simple workout plan"),
         subtitle = md("what are you waiting for?")
       ) %>%
       tab_source_note(
-        source_note = md("Click `Get  after it!` if changing <br>parameters. Made by **@parmsam**")
+        source_note = md('Click `Get  after it!` if changing <br>parameters. Made by <b><a href="https://github.com/parmsam">@parmsam</a></b>.')
       ) %>%
       tab_source_note(
-        source_note = md("Consult health professional before <br>starting a fitness program")
+        source_note = md("Consult health professional before <br>starting a fitness program.")
       )
+    vals$gg
   })
   
   output$gt_table <-
@@ -123,13 +126,11 @@ server <- function(input,output, session) {
       str_c('rand_workout_plan_', Sys.Date(), '.png', sep='')
       },
     content = function(con) {
-      gtsave(gt_table(), expand = 50, filename =  con)
+      gtsave(vals$gg, expand = 50, filename =  con)
     }
   )
   
 }
 
-if (interactive()) {
-  shinyApp(ui, server)
-}
+shinyApp(ui, server)
 
