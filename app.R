@@ -21,7 +21,7 @@ if (is.null(phantomjs_path)){
   FlgJS <- F
 } else{
   FlgJS <- T
-}0
+}
 # get data ----
 gdocs_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv"
 #read data from url
