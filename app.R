@@ -1,24 +1,27 @@
 # purpose: build random workouts from list of exercises
 # load libraries ----
 library(shiny)
+library(rsconnect)
 library(dplyr)
 library(readr)
 library(stringr)
 library(lubridate)
 library(gt)
-library(downloadthis)
+# library(downloadthis)
 library(webshot)
+library(writexl)
 # library(shinythemes)
 library(bslib)
 library(shinyjs)
+library(httr)
 
 # get data ----
 gdocs_url <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv"
 #read data from url
-exercise_data <- read_csv( url(gdocs_url) )
+exercise_data <- read_csv(gdocs_url)
 
 #set dynamic themes
-light <- bslib::bs_theme(version = 4, bootswatch = "minty")
+light <- bs_theme(version = 4, bootswatch = "minty")
 
 # define UI ----
 ui <- fluidPage(
@@ -61,15 +64,15 @@ server <- function(input,output, session) {
   })
   
   observe({
-    shinyjs::hide("downloadXLSX")
+    hide("downloadXLSX")
     if(input$goButton)
-      shinyjs::show("downloadXLSX")
+      show("downloadXLSX")
   })
   
   observe({
-    shinyjs::hide("downloadPNG")
+    hide("downloadPNG")
     if(input$goButton)
-      shinyjs::show("downloadPNG")
+      show("downloadPNG")
   })
   
   data_extr <- eventReactive(input$goButton, { 
@@ -111,7 +114,7 @@ server <- function(input,output, session) {
       str_c('rand_workout_plan_', Sys.Date(), '.xlsx', sep='')
       },
     content = function(con) {
-      writexl::write_xlsx(data_extr(), con)
+      write_xlsx(data_extr(), con)
       }
     )
   
