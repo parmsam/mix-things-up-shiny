@@ -1,5 +1,9 @@
 # mix-things-up-shiny
 random workout plan generator
+
+![GIF here](https://media.tenor.com/images/42abec554053fce0d2e384c498f97561/tenor.gif)
+
+https://media4.giphy.com/media/gfrPLYmm170wuQUnZ3/giphy.gif
 ## Shiny App
 https://parmsam.shinyapps.io/MixThingsUp/
 ## Purpose
