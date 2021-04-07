@@ -7,6 +7,10 @@ random workout plan generator
 https://parmsam.shinyapps.io/MixThingsUp/
 ## Purpose
 Build random workouts from list of exercises
+## Blog Posts:
+https://parmsam.medium.com/mix-things-up-a-random-workout-plan-generator-ad15210b925d
+
+https://databreadcrumbs.com/posts/2021-04-07-mix-things-up/
 ## Data Sources
 https://docs.google.com/spreadsheets/d/e/2PACX-1vQliF1fPTXNk6b4cVwbkD7GmYFmyNKkG2GrzYcr21d-C02L61gZZNrk3beBEf95mQ-doWd3MweAyZKH/pub?gid=0&single=true&output=csv
 ## Articles
