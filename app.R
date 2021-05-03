@@ -34,7 +34,7 @@ light <- bs_theme(version = 4, bootswatch = "minty")
 ui <- fluidPage(
   # theme = shinytheme("lumen"), 
   theme = light,
-  h4("a simple workout plan generator"),
+  h4("a random workout plan generator"),
   titlePanel("Mix Things Up"),
                 # Layout a sidebar and main area
                 sidebarLayout(
