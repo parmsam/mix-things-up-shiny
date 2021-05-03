@@ -102,7 +102,7 @@ server <- function(input,output, session) {
     vals$gg <- data_extr() %>% 
     gt() %>%
       tab_header(
-        title = md("Simple workout plan"),
+        title = md("Random workout plan"),
         subtitle = md("what are you waiting for?")
       ) %>%
       tab_source_note(
